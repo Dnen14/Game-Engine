@@ -58,7 +58,7 @@ public class HelloApplication extends Application {
         root.getChildren().add(canvas);
         // Creates the scene
         primaryStage.setScene(scene);
-
+         // comment test //
         final long startNanoTime = System.nanoTime();
          Position p = new Position(15, 15);
         new AnimationTimer()
