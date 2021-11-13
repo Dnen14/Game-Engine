@@ -6,6 +6,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.*;
 import javafx.scene.transform.Rotate;
@@ -21,6 +22,10 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import org.jbox2d.common.Vec2;
+import org.jbox2d.dynamics.Body;
+import org.jbox2d.dynamics.BodyDef;
+import org.jbox2d.dynamics.World;
 
 
 public class HelloApplication extends Application implements Runnable {
@@ -30,6 +35,8 @@ public class HelloApplication extends Application implements Runnable {
     private static Map<String, List<Drawable>> layers = new LinkedHashMap<>();
     private static HashMap<String, Image> textures = new HashMap<>();
     private static HashSet<KeyCode> keysPressed = new HashSet<>();
+    private static World world = new World(new Vec2());
+    private Vec2 v = new Vec2();
 
 
     public HelloApplication()
@@ -44,8 +51,18 @@ public class HelloApplication extends Application implements Runnable {
         ctx = canvas.getGraphicsContext2D();
         //main Render loop
         new AnimationTimer() {
+            private long lasttime;
+            @Override
+            public void start()
+            {
+                lasttime = System.nanoTime();
+                super.start();
+            }
             public void handle(long currentNanoTime) {
+                long delta = currentNanoTime - lasttime;
+                world.step(1f/60f, 3, 5);
                 draw();
+                lasttime = currentNanoTime;
             }
         }.start();
 
@@ -80,6 +97,11 @@ public class HelloApplication extends Application implements Runnable {
     // Get the list of layers
     public List<Drawable> getLayer(String layer) {
         return layers.get(layer);
+    }
+
+    public Body addBody(BodyDef def)
+    {
+        return  world.createBody(def);
     }
 
     //main draw function
