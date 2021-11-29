@@ -15,40 +15,32 @@ public class Tester {
     {
         //Code to test if game engine is working
         HelloApplication e = new HelloApplication();
-         /*Player player = new Player(new Vector(), "JetPack Character.png") {
-           @Override
-           public void update()
-           {
-              move();
-           }
-        };*/
-        /*Draw draw = new Draw(new Vector(), "Jetpack Character.png") {
-            @Override
-            public void update() {
-
-            }
-        }; */
 
         PolygonShape shape = new PolygonShape();
         shape.setAsBox(5, 5, new Vec2(), 0);
         BodyDef b = new BodyDef();
         FixtureDef fd = new FixtureDef();
         fd.shape = shape;
-        fd.density = 0.5f;
+        fd.density = 0.1f;
         fd.friction = 0.03f;
         b.type = BodyType.DYNAMIC;
         Body body = e.addBody(b);
         body.createFixture(fd);
 
         Player player = new Player(body, "JetPack Character.png") {
+            int termV = 1;
             @Override
             public void update()
             {
-                body.setGravityScale(body.getPosition().y);
+                Vec2 V = new Vec2(0, (float) .5);
+                V = V.mul(100f);
+                body.applyForce( V, new Vec2());
+
                 if(e.isPressed(KeyCode.W))
                 {
-                    Vec2 v = new Vec2(0, -(float)Math.cos(body.getAngle()));
-                    v = v.mul(10000f);
+
+                    Vec2 v = new Vec2((float)Math.sin(body.getAngle() / 180 * Math.PI), -(float)Math.cos(body.getAngle()  / 180 * Math.PI));
+                    v = v.mul(100f);
                     body.applyForce( v, new Vec2());
                 }
                 if(e.isPressed(KeyCode.A))
@@ -58,8 +50,8 @@ public class Tester {
                 if(e.isPressed(KeyCode.S))
                 {
 
-                    Vec2 v = new Vec2(0, (float)Math.cos(body.getAngle()));
-                    v = v.mul(10000f);
+                    Vec2 v = new Vec2( (float)Math.sin(body.getAngle()  / 180 * Math.PI), (float)Math.cos(body.getAngle() / 180 * Math.PI));
+                    v = v.mul(100f);
                     body.applyForce( v, new Vec2());
                 }
                 if(e.isPressed(KeyCode.D))
